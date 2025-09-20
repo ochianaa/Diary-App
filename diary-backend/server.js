@@ -10,17 +10,17 @@ app.use(cors());
 app.use(express.json());
 
 // GET all notes
-app.get('/notes', (req, res) => {
-  db.query('SELECT * FROM notes', (err, results) => {
+app.get('/diary_notes', (req, res) => {
+  db.query('SELECT * FROM diary_notes', (err, results) => {
     if (err) return res.status(500).json({ error: err });
     res.json(results);
   });
 });
 
 // GET notes by ID
-app.get('/notes/:id', (req, res) => {
+app.get('/diary_notes/:id', (req, res) => {
   const { id } = req.params;
-  db.query('SELECT * FROM notes WHERE id = ?', [id], (err, results) => {
+  db.query('SELECT * FROM diary_notes WHERE id = ?', [id], (err, results) => {
     if (err) return res.status(500).json({ error: err });
     if (results.length === 0) return res.status(404).json({ message: 'Note not found' });
     res.json(results[0]);
@@ -28,10 +28,10 @@ app.get('/notes/:id', (req, res) => {
 });
 
 // POST notes
-app.post('/notes', (req, res) => {
+app.post('/diary_notes', (req, res) => {
   const { title, content } = req.body;
   db.query(
-    'INSERT INTO notes (title, content) VALUES (?, ?)',
+    'INSERT INTO diary_notes (title, content) VALUES (?, ?)',
     [title, content],
     (err, results) => {
       if (err) return res.status(500).json({ error: err });
@@ -41,11 +41,11 @@ app.post('/notes', (req, res) => {
 });
 
 // PUT notes
-app.put('/notes/:id', (req, res) => {
+app.put('/diary_notes/:id', (req, res) => {
   const { id } = req.params;
   const { title, content } = req.body;
   db.query(
-    'UPDATE notes SET title = ?, content = ? WHERE id = ?',
+    'UPDATE diary_notes SET title = ?, content = ? WHERE id = ?',
     [title, content, id],
     (err, results) => {
       if (err) return res.status(500).json({ error: err });
@@ -56,9 +56,9 @@ app.put('/notes/:id', (req, res) => {
 });
 
 // DELETE notes
-app.delete('/notes/:id', (req, res) => {
+app.delete('/diary_notes/:id', (req, res) => {
   const { id } = req.params;
-  db.query('DELETE FROM notes WHERE id = ?', [id], (err, results) => {
+  db.query('DELETE FROM diary_notes WHERE id = ?', [id], (err, results) => {
     if (err) return res.status(500).json({ error: err });
     if (results.affectedRows === 0) return res.status(404).json({ message: 'Note not found' });
     res.json({ message: 'Note deleted successfully' });
